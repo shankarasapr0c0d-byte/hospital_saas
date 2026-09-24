@@ -792,23 +792,26 @@ Author URL: https://themeforest.net/user/dreamstechnologies
   border-bottom: 1px solid var(--menu-item-border);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   z-index: 1000;
   background: var(--menu-bg);
 }
 .sidebar .sidebar-logo .logo {
   display: flex;
   align-items: center;
+  flex: 1;
+  max-width: 210px;
 }
 .sidebar .sidebar-logo .dark-logo img, .sidebar .sidebar-logo .logo-normal img {
-  height: 36px;
-  width: auto;
-  max-width: 185px;
+  height: 38px;
+  width: 195px;
+  max-width: 100%;
+  object-fit: contain;
   margin-top: 0;
   display: block;
 }
 .sidebar .sidebar-logo .logo-small img {
-  height: 32px;
+  height: 34px;
   width: auto;
 }
 .sidebar .sidebar-logo .logo-small, .sidebar .sidebar-logo .dark-logo {
