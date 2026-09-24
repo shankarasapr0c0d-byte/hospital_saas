@@ -1,26 +1,18 @@
 {
   "version": 2,
-  "outputDirectory": "frontend/dist",
   "cleanUrls": true,
   "rewrites": [
     {
       "source": "/api/:match*",
       "destination": "https://hospital-saas-backend-in7l.onrender.com/api/:match*"
-    }
-  ],
-  "headers": [
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/dist/index.html"
+    },
     {
       "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        }
-      ]
+      "destination": "/frontend/dist/$1"
     }
   ]
 }
