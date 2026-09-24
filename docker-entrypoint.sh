@@ -19,10 +19,9 @@ if [ "${DB_CONNECTION}" = "sqlite" ] || [ -z "${DB_CONNECTION}" ] && [ -z "${DB_
     chown -R www-data:www-data /app/database
 fi
 
-# Generate APP_KEY if not provided
-if [ -z "$APP_KEY" ]; then
-    echo "Notice: APP_KEY not provided, generating one..."
-    php artisan key:generate --force || true
+# Ensure valid APP_KEY
+if [ -z "$APP_KEY" ] || [ "${#APP_KEY}" -lt 10 ]; then
+    export APP_KEY="base64:7KxWZwMdQC/ZhS9n1rlLSBHaXW+qfage2Ses1UaH+os="
 fi
 
 # Run database migrations
