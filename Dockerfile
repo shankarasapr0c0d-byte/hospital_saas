@@ -16,12 +16,15 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
+
 # ==========================================
-# Stage 3: Production runtime with FrankenPHP
+# Stage 3: Production runtime with PHP 8.3
 # ==========================================
-FROM dunglas/frankenphp:1-php8.3-bookworm
+FROM php:8.3-cli-bookworm
 
 # Install required PHP extensions for Laravel & PostgreSQL / MySQL / SQLite
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
 RUN install-php-extensions \
     pdo_pgsql \
     pdo_mysql \
@@ -66,34 +69,17 @@ RUN mkdir -p /app/storage/framework/cache/data \
     && chown -R www-data:www-data /app/storage /app/bootstrap/cache \
     && chmod -R 775 /app/storage /app/bootstrap/cache
 
-# DockHosting / Coolify build arguments
-ARG APP_URL
-ARG DATABASE_URL
-ARG DB_DATABASE
-ARG DB_CONNECTION
-ARG DB_HOST
-ARG DB_PORT
-ARG DB_USERNAME
-ARG DB_PASSWORD
-ARG TRUSTED_PROXIES=*
-ARG HTTPS=on
-ARG PORT=8000
-ARG COOLIFY_URL
-ARG COOLIFY_FQDN
-ARG COOLIFY_BRANCH
-ARG COOLIFY_RESOURCE_UUID
-
 # Environment defaults
-ENV PORT=${PORT}
-ENV SERVER_NAME="http://:${PORT}"
+ENV PORT=8000
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 
-EXPOSE ${PORT}
+EXPOSE 8000
 
 # Entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+
